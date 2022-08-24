@@ -1,16 +1,16 @@
 CXX := clang++
 CXXFLAGS := -std=c++20 -Ofast
 
-NAME := suffix_tree
+NAME := suffixtree
 BUILD_DIR := ./build
-BIN := $(BUILD_DIR)/bin/$(NAME)
+LIB := $(BUILD_DIR)/lib/lib$(NAME).a
 SRC := $(wildcard ./src/*.cpp)
 OBJ := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRC)))
-DEP := $($(filter-out %main.o,$(OBJ)):.o=.d)
+DEP := $($(OBJ):.o=.d)
 
-$(BIN): $(OBJ)
+$(LIB): $(OBJ)
 	mkdir -p $(@D)
-	$(CXX) $^ -o $@
+	ar rcs $@ $^
 
 include $(DEP)
 
@@ -18,7 +18,13 @@ $(BUILD_DIR)/%.o: ./src/%.cpp Makefile
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -MMD -c $< -I./include -o $@
 
-.PHONY: clean
+.PHONY: install uninstall clean
+
+install:
+	cp $(LIB) /usr/local/lib
+
+uninstall:
+	$(RM) /usr/local/lib/lib$(NAME).a
 
 clean:
 	rm -rfv $(BUILD_DIR)
