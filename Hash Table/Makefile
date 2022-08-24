@@ -14,7 +14,7 @@ $(LIB): $(OBJ)
 
 include $(DEP)
 
-$(BUILD_DIR)/%.o: ./src/%.c Makefile
+$(BUILD_DIR)/%.o: ./src/%.c ./include/%.h Makefile
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -MMD -c $< -I./include -o $@
 

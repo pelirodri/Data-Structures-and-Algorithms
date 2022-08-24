@@ -14,7 +14,8 @@ $(LIB): $(OBJ)
 
 include $(DEP)
 
-$(BUILD_DIR)/%.o: ./src/%.cpp Makefile
+.SECONDEXPANSION:
+$(BUILD_DIR)/%.o: $$(wildcard ./src/%.cpp) $$(wildcard ./src/%.hpp) ./include/%.hpp Makefile
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -MMD -c $< -I./include -I./src -o $@
 
