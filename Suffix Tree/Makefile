@@ -16,7 +16,7 @@ include $(DEP)
 
 $(BUILD_DIR)/%.o: ./src/%.cpp Makefile
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MMD -c $< -I./include -o $@
+	$(CXX) $(CXXFLAGS) -MMD -c $< -I./include -I./src -o $@
 
 .PHONY: install uninstall clean
 
