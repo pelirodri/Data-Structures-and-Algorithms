@@ -1,11 +1,11 @@
 CXX := clang++
-CXXFLAGS := -std=c++20 -Ofast
+CXXFLAGS := -I./include -I./src -std=c++20 -Ofast
 
 NAME := suffixtree
-BUILD_DIR := ./build
-LIB := $(BUILD_DIR)/lib/lib$(NAME).a
+BUILD := ./build
+LIB := $(BUILD)/lib/lib$(NAME).a
 SRC := $(wildcard ./src/*.cpp)
-OBJ := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRC)))
+OBJ := $(patsubst %.cpp,$(BUILD)/%.o,$(notdir $(SRC)))
 DEP := $($(OBJ):.o=.d)
 
 $(LIB): $(OBJ)
@@ -14,10 +14,9 @@ $(LIB): $(OBJ)
 
 include $(DEP)
 
-.SECONDEXPANSION:
-$(BUILD_DIR)/%.o: $$(wildcard ./src/%.cpp) $$(wildcard ./src/%.hpp) ./include/%.hpp Makefile
+$(BUILD)/%.o: ./src/%.cpp $(wildcard ./src/*.hpp) $(wildcard ./include/*.hpp) Makefile
 	mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MMD -c $< -I./include -I./src -o $@
+	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@
 
 .PHONY: install uninstall clean
 

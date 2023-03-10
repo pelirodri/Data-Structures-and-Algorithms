@@ -1,11 +1,11 @@
 CC := clang
-CFLAGS := -std=c2x -Ofast
+CFLAGS := -I./include -std=c2x -Ofast
 
 NAME := hashtable
-BUILD_DIR := ./build
-LIB := $(BUILD_DIR)/lib/lib$(NAME).a
+BUILD := ./build
+LIB := $(BUILD)/lib/lib$(NAME).a
 SRC := $(wildcard ./src/*.c)
-OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(notdir $(SRC)))
+OBJ := $(patsubst %.c,$(BUILD)/%.o,$(notdir $(SRC)))
 DEP := $($(OBJ):.o=.d)
 
 $(LIB): $(OBJ)
@@ -14,9 +14,9 @@ $(LIB): $(OBJ)
 
 include $(DEP)
 
-$(BUILD_DIR)/%.o: ./src/%.c ./include/%.h Makefile
+$(BUILD)/%.o: ./src/%.c $(wildcard ./include/*.h) Makefile
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -MMD -c $< -I./include -o $@
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 .PHONY: install uninstall clean
 
@@ -27,4 +27,4 @@ uninstall:
 	$(RM) /usr/local/lib/lib$(NAME).a
 
 clean:
-	rm -rfv $(BUILD_DIR)
+	rm -rfv $(BUILD)
